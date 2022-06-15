@@ -8,6 +8,7 @@ const formUsuario = document.querySelector('form')
 const nombre = document.getElementById('nombre')
 const email = document.getElementById('email')
 const prioridad = document.getElementById('prioridad')
+const buscar = document.getElementById('buscar-correo')
 var opcion = ''
 
 btnCrear.addEventListener('click', () => {
@@ -27,8 +28,7 @@ const mostrar = (usuarios) => {
                             <td>${usuario.email}</td>
                             <td>${usuario.prioridad}</td>
                             <td class="text-center"><a class="btnEditar btn btn-primary">Editar</a><a class="btnBorrar btn btn-danger">Borrar</a></td>
-                       </tr>
-                    `
+                       </tr>`
     })
     contenedor.innerHTML = resultados
 }
@@ -62,7 +62,7 @@ on(document, 'click', '.btnBorrar', e => {
                 method: 'DELETE'
             })
                 .then(res => res.json())
-                .then(() => location.reload())
+                .then(() => { location.reload() })
             //alertify.success('Ok')
         },
         function () {
@@ -101,6 +101,21 @@ on(document, 'click', '.btnBuscarEmail', (e) => {
         <td>${data[0].email}</td>
         <td>${data[0].prioridad}</td>
         <td class="text-center"><a class="btnEditar btn btn-primary">Editar</a><a class="btnBorrar btn btn-danger">Borrar</a></td></tr>`)
+
+    if (e.target.matches("#btn-eliminar-correo")) {
+        alertify.confirm("¿Desea eliminar el correo?",
+            function () {
+                fetch(url + "email/" + busqueda.value, {
+                    method: 'DELETE'
+                })
+                    .then((res) => { res.json() })
+                    .then(() => { location.reload() })
+                //alertify.success('Ok')
+            },
+            function () {
+                alertify.error('Cancel')
+            })
+    }
 })
 
 //Procedimiento para Crear y Editar
@@ -143,5 +158,6 @@ formUsuario.addEventListener('submit', (e) => {
             .then(response => response.json())
             .then(response => location.reload())
     }
+    modalUsuario.hide();
 })
 
