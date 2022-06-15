@@ -8,7 +8,7 @@ const formUsuario = document.querySelector('form')
 const nombre = document.getElementById('nombre')
 const email = document.getElementById('email')
 const prioridad = document.getElementById('prioridad')
-const buscar = document.getElementById('buscar-correo')
+const buscar = document.getElementById('buscar-email')
 var opcion = ''
 
 btnCrear.addEventListener('click', () => {
@@ -85,27 +85,23 @@ on(document, 'click', '.btnEditar', e => {
     modalUsuario.show()
 })
 
-on(document, 'click', '.btnBuscarEmail', (e) => {
+on(document, 'click', '#btn-buscar-email', (e) => {
     e.preventDefault();
-    const input = document.getElementById("buscarPorEmail");
-    const inp = input.value;
-    const emailUrl = `/buscar/${inp}`;
+    const emailUrl = "buscar/" + buscar.value;
 
-    fetch(url + emailUrl, {
-        method: 'GET'
-    })
-        .then(res => res.json())
-        .then(data => contenedor.innerHTML = `<tr>
-        <td>${data[0].id}</td>
-        <td>${data[0].nombre}</td>
-        <td>${data[0].email}</td>
-        <td>${data[0].prioridad}</td>
-        <td class="text-center"><a class="btnEditar btn btn-primary">Editar</a><a class="btnBorrar btn btn-danger">Borrar</a></td></tr>`)
-
-    if (e.target.matches("#btn-eliminar-correo")) {
+    if (e.target.matches("#buscar-email")) {
+        fetch(url + emailUrl, {
+            method: 'GET'
+        })
+            .then(res => res.json())
+            .then(data => mostrar(data))
+            .catch(error => console.log(error))
+    }
+   
+    if (e.target.matches("#btn-eliminar-email")) {
         alertify.confirm("¿Desea eliminar el correo?",
             function () {
-                fetch(url + "email/" + busqueda.value, {
+                fetch(url + "eliminar/" + buscar.value, {
                     method: 'DELETE'
                 })
                     .then((res) => { res.json() })
